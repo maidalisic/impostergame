@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import normalWords from './words.json';
 import countryWords from './countries.json';
 import adultWords from './adults.json';
@@ -14,13 +14,7 @@ function App() {
   const [activeCardIndex, setActiveCardIndex] = useState(null);
   const [mode, setMode] = useState('normal');
 
-  useEffect(() => {
-    if (gameStarted) {
-      initializeGame();
-    }
-  }, [gameStarted]);
-
-  const initializeGame = () => {
+  const initializeGame = useCallback(() => {
     let words;
     switch (mode) {
       case 'countries':
@@ -48,7 +42,13 @@ function App() {
 
     setWordList(newWordList);
     setRevealedWords(Array(numPlayers).fill(false));
-  };
+  }, [mode, numPlayers, numImposters]);
+
+  useEffect(() => {
+    if (gameStarted) {
+      initializeGame();
+    }
+  }, [gameStarted, initializeGame]);
 
   const handleRevealWord = (index) => {
     setRevealedWords((prevRevealedWords) => {
