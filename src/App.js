@@ -13,6 +13,8 @@ function App() {
     const [revealedWords, setRevealedWords] = useState([]);
     const [activeCardIndex, setActiveCardIndex] = useState(null);
     const [mode, setMode] = useState("normal");
+    const [showInfo, setShowInfo] = useState(false);
+    const [showCard, setShowCard] = useState(null);
 
     const initializeGame = useCallback(() => {
         let words;
@@ -51,11 +53,7 @@ function App() {
     }, [gameStarted, initializeGame]);
 
     const handleRevealWord = (index) => {
-        setRevealedWords((prevRevealedWords) => {
-            const newRevealedWords = [...prevRevealedWords];
-            newRevealedWords[index] = !newRevealedWords[index];
-            return newRevealedWords;
-        });
+        setShowCard(wordList[index]);
         setActiveCardIndex(index);
     };
 
@@ -66,6 +64,7 @@ function App() {
         setRevealedWords((prevRevealedWords) =>
             prevRevealedWords.filter((_, i) => i !== index)
         );
+        setShowCard(null);
         setActiveCardIndex(null);
     };
 
@@ -105,8 +104,69 @@ function App() {
         setGameStarted(true);
     };
 
+    const resetGame = () => {
+        setGameStarted(false);
+        setStep(1);
+        setNumPlayers(0);
+        setNumImposters(0);
+        setMode("normal");
+    };
+
     return (
         <div className="App">
+            <button className="home-button" onClick={resetGame}>
+                🏠
+            </button>
+            <button className="info-button" onClick={() => setShowInfo(true)}>
+                ℹ️
+            </button>
+            {showInfo && (
+                <div className="info-overlay">
+                    <div className="info-content">
+                        <button
+                            className="close-button"
+                            onClick={() => setShowInfo(false)}
+                        >
+                            X
+                        </button>
+                        <h2>Spielanleitung</h2>
+                        <p>
+                            Word Guesser ist ein Spiel, bei dem die meisten
+                            Spieler das gleiche Wort sehen, aber einige sehen
+                            "Imposter". Ziel des Spiels ist es, die Imposter zu
+                            identifizieren.
+                        </p>
+                        <p>Spielablauf:</p>
+                        <ul>
+                            <li>Wähle die Anzahl der Spieler und Imposter.</li>
+                            <li>
+                                Starte das Spiel. Jeder Spieler sieht eine Karte
+                                mit einem Wort oder "Imposter".
+                            </li>
+                            <li>
+                                Diskutiert und versucht herauszufinden, wer die
+                                Imposter sind.
+                            </li>
+                            <li>
+                                Die Imposter versuchen, unentdeckt zu bleiben.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            )}
+            {showCard && (
+                <div className="info-overlay">
+                    <div className="info-content">
+                        <button
+                            className="close-button"
+                            onClick={() => handleRemoveWord(activeCardIndex)}
+                        >
+                            X
+                        </button>
+                        <p>{showCard}</p>
+                    </div>
+                </div>
+            )}
             <header className="App-header">
                 <h1>Word Guesser</h1>
                 {!gameStarted ? (
@@ -206,18 +266,9 @@ function App() {
                         )}
                     </>
                 ) : (
-                    <div
-                        className={`card-container ${
-                            activeCardIndex !== null ? "blurred" : ""
-                        }`}
-                    >
+                    <div className="card-container">
                         {wordList.map((word, index) => (
-                            <div
-                                className={`card ${
-                                    activeCardIndex === index ? "active" : ""
-                                }`}
-                                key={index}
-                            >
+                            <div className="card" key={index}>
                                 {revealedWords[index] ? (
                                     <>
                                         <p>{word}</p>
@@ -240,7 +291,7 @@ function App() {
                         ))}
                         {wordList.length === 0 && (
                             <button
-                                onClick={() => setGameStarted(false)}
+                                onClick={resetGame}
                                 style={{ marginTop: "20px" }}
                             >
                                 Neues Spiel
