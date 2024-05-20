@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/impostergame/static/css/main.5fad8155.css",
+    "main.css": "/impostergame/static/css/main.e179e8dc.css",
     "main.js": "/impostergame/static/js/main.37a27519.js",
     "static/js/453.91809ad0.chunk.js": "/impostergame/static/js/453.91809ad0.chunk.js",
     "index.html": "/impostergame/index.html",
-    "main.5fad8155.css.map": "/impostergame/static/css/main.5fad8155.css.map",
+    "main.e179e8dc.css.map": "/impostergame/static/css/main.e179e8dc.css.map",
     "main.37a27519.js.map": "/impostergame/static/js/main.37a27519.js.map",
     "453.91809ad0.chunk.js.map": "/impostergame/static/js/453.91809ad0.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5fad8155.css",
+    "static/css/main.e179e8dc.css",
     "static/js/main.37a27519.js"
   ]
 }
