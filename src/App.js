@@ -280,37 +280,42 @@ function App() {
                         )}
                     </>
                 ) : (
-                    <div className="card-container">
-                        {wordList.map((word, index) => (
-                            <div className="card" key={index}>
-                                {revealedWords[index] ? (
-                                    <>
-                                        <p>{word}</p>
+                    <div className="game-info">
+                        <p>Spiel gestartet mit {numPlayers} Spielern</p>
+                        <div className="card-container">
+                            {wordList.map((word, index) => (
+                                <div className="card" key={index}>
+                                    {revealedWords[index] ? (
+                                        <>
+                                            <p>{word}</p>
+                                            <button
+                                                onClick={() =>
+                                                    handleRemoveWord(index)
+                                                }
+                                            >
+                                                Entfernen
+                                            </button>
+                                        </>
+                                    ) : (
                                         <button
                                             onClick={() =>
-                                                handleRemoveWord(index)
+                                                handleRevealWord(index)
                                             }
                                         >
-                                            Entfernen
+                                            Karte umdrehen
                                         </button>
-                                    </>
-                                ) : (
-                                    <button
-                                        onClick={() => handleRevealWord(index)}
-                                    >
-                                        Karte umdrehen
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                        {wordList.length === 0 && (
-                            <button
-                                onClick={resetGame}
-                                style={{ marginTop: "20px" }}
-                            >
-                                Neues Spiel
-                            </button>
-                        )}
+                                    )}
+                                </div>
+                            ))}
+                            {wordList.length === 0 && (
+                                <button
+                                    onClick={resetGame}
+                                    style={{ marginTop: "20px" }}
+                                >
+                                    Neues Spiel
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </header>
