@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import normalWords from "./words.json";
 import countryWords from "./countries.json";
 import adultWords from "./adults.json";
+import celebritiesWords from "./celebrities.json";
 import "./App.css";
 
 function App() {
@@ -24,6 +25,9 @@ function App() {
                 break;
             case "adults":
                 words = adultWords;
+                break;
+            case "celebrities":
+                words = celebritiesWords;
                 break;
             case "normal":
             default:
@@ -200,6 +204,16 @@ function App() {
                                         }
                                     >
                                         18+
+                                    </button>
+                                    <button
+                                        onClick={() => setMode("celebrities")}
+                                        className={
+                                            mode === "celebrities"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Berühmtheiten
                                     </button>
                                 </div>
                                 <button onClick={() => setStep(2)}>
