@@ -3,6 +3,7 @@ import normalWords from "./words.json";
 import countryWords from "./countries.json";
 import adultWords from "./adults.json";
 import celebritiesWords from "./celebrities.json";
+import { applyTheme } from "./theme";
 import "./App.css";
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
     const [mode, setMode] = useState("normal");
     const [showInfo, setShowInfo] = useState(false);
     const [showCard, setShowCard] = useState(null);
+    const [theme, setTheme] = useState("dark");
+    const [showThemeOverlay, setShowThemeOverlay] = useState(false);
 
     const initializeGame = useCallback(() => {
         let words;
@@ -55,6 +58,10 @@ function App() {
             initializeGame();
         }
     }, [gameStarted, initializeGame]);
+
+    useEffect(() => {
+        applyTheme(theme);
+    }, [theme]);
 
     const handleRevealWord = (index) => {
         setShowCard(wordList[index]);
@@ -116,10 +123,22 @@ function App() {
         setMode("normal");
     };
 
+    const restartGame = () => {
+        initializeGame();
+    };
+
+    const handleThemeChange = (selectedTheme) => {
+        setTheme(selectedTheme);
+        setShowThemeOverlay(false);
+    };
+
     return (
         <div className="App">
             <button className="home-button" onClick={resetGame}>
                 🏠
+            </button>
+            <button className="theme-button" onClick={() => setShowThemeOverlay(true)}>
+                Theme wechseln
             </button>
             <button className="info-button" onClick={() => setShowInfo(true)}>
                 ℹ️
@@ -168,6 +187,37 @@ function App() {
                             X
                         </button>
                         <p>{showCard}</p>
+                    </div>
+                </div>
+            )}
+            {showThemeOverlay && (
+                <div className="theme-overlay">
+                    <div className="theme-content">
+                        <button
+                            className="close-button"
+                            onClick={() => setShowThemeOverlay(false)}
+                        >
+                            X
+                        </button>
+                        <h2>Wählen Sie ein Thema</h2>
+                        <div className="theme-preview">
+                            <div
+                                className="theme-option theme-dark"
+                                onClick={() => handleThemeChange("dark")}
+                            ></div>
+                            <div
+                                className="theme-option theme-light"
+                                onClick={() => handleThemeChange("light")}
+                            ></div>
+                            <div
+                                className="theme-option theme-pink"
+                                onClick={() => handleThemeChange("pink")}
+                            ></div>
+                            <div
+                                className="theme-option theme-blue"
+                                onClick={() => handleThemeChange("blue")}
+                            ></div>
+                        </div>
                     </div>
                 </div>
             )}
@@ -308,12 +358,14 @@ function App() {
                                 </div>
                             ))}
                             {wordList.length === 0 && (
-                                <button
-                                    onClick={resetGame}
-                                    style={{ marginTop: "20px" }}
-                                >
-                                    Neues Spiel
-                                </button>
+                                <div style={{ marginTop: "20px" }}>
+                                    <button onClick={resetGame}>
+                                        Neues Spiel
+                                    </button>
+                                    <button onClick={restartGame}>
+                                        Spiel neu starten
+                                    </button>
+                                </div>
                             )}
                         </div>
                     </div>
