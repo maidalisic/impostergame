@@ -3,6 +3,8 @@ import normalWords from "./words.json";
 import countryWords from "./countries.json";
 import adultWords from "./adults.json";
 import celebritiesWords from "./celebrities.json";
+import jobsWords from "./jobs.json";
+import memes from "./memes.json";
 import { applyTheme } from "./theme";
 import "./App.css";
 
@@ -20,32 +22,36 @@ function App() {
     const [theme, setTheme] = useState("dark");
     const [showThemeOverlay, setShowThemeOverlay] = useState(false);
 
-    const initializeGame = useCallback(() => {
-        let words;
+    const getItemsByMode = (mode) => {
         switch (mode) {
             case "countries":
-                words = countryWords;
-                break;
+                return countryWords;
             case "adults":
-                words = adultWords;
-                break;
+                return adultWords;
             case "celebrities":
-                words = celebritiesWords;
-                break;
+                return celebritiesWords;
+            case "jobs":
+                return jobsWords;
+            case "memes":
+                return memes;
             case "normal":
             default:
-                words = normalWords;
-                break;
+                return normalWords;
         }
-        const realWord = words[Math.floor(Math.random() * words.length)];
-        const newWordList = Array(numPlayers).fill(realWord);
+    };
+
+    const initializeGame = useCallback(() => {
+        const items = getItemsByMode(mode);
+        const chosenItem = items[Math.floor(Math.random() * items.length)];
         const impostorIndexes = [];
+        const newWordList = Array(numPlayers).fill(chosenItem);
 
         while (impostorIndexes.length < numImposters) {
             const randomIndex = Math.floor(Math.random() * numPlayers);
             if (!impostorIndexes.includes(randomIndex)) {
                 impostorIndexes.push(randomIndex);
-                newWordList[randomIndex] = "Imposter";
+                newWordList[randomIndex] =
+                    mode === "memes" ? { name: "Imposter", path: null } : "Imposter";
             }
         }
 
@@ -186,7 +192,11 @@ function App() {
                         >
                             X
                         </button>
-                        <p>{showCard}</p>
+                        {mode === "memes" && showCard.path ? (
+                            <img src={`${process.env.PUBLIC_URL}${showCard.path}`} alt={showCard.name} style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                        ) : (
+                            <p>{showCard.name || showCard}</p>
+                        )}
                     </div>
                 </div>
             )}
@@ -265,6 +275,22 @@ function App() {
                                     >
                                         Berühmtheiten
                                     </button>
+                                    <button
+                                        onClick={() => setMode("jobs")}
+                                        className={
+                                            mode === "jobs" ? "selected" : ""
+                                        }
+                                    >
+                                        Berufe
+                                    </button>
+                                    <button
+                                        onClick={() => setMode("memes")}
+                                        className={
+                                            mode === "memes" ? "selected" : ""
+                                        }
+                                    >
+                                        Memes
+                                    </button>
                                 </div>
                                 <button onClick={() => setStep(2)}>
                                     Weiter
@@ -333,11 +359,15 @@ function App() {
                     <div className="game-info">
                         <p>Spiel gestartet mit {numPlayers} Spielern</p>
                         <div className="card-container">
-                            {wordList.map((word, index) => (
+                            {wordList.slice(0, numPlayers).map((word, index) => (
                                 <div className="card" key={index}>
                                     {revealedWords[index] ? (
                                         <>
-                                            <p>{word}</p>
+                                            {mode === "memes" && word.path ? (
+                                                <img src={`${process.env.PUBLIC_URL}${word.path}`} alt={word.name} style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                                            ) : (
+                                                <p>{word.name || word}</p>
+                                            )}
                                             <button
                                                 onClick={() =>
                                                     handleRemoveWord(index)
