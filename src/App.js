@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import normalWords from "./words.json";
 import countryWords from "./countries.json";
 import adultWords from "./adults.json";
@@ -22,7 +22,7 @@ function App() {
     const [theme, setTheme] = useState("dark");
     const [showThemeOverlay, setShowThemeOverlay] = useState(false);
 
-    const modes = ["normal", "countries", "adults", "celebrities", "jobs"];
+    const modes = useMemo(() => ["normal", "countries", "adults", "celebrities", "jobs"], []);
 
     const getItemsByMode = (mode) => {
         switch (mode) {
@@ -65,7 +65,7 @@ function App() {
 
         setWordList(newWordList);
         setRevealedWords(Array(numPlayers).fill(false));
-    }, [mode, numPlayers, numImposters]);
+    }, [mode, numPlayers, numImposters, modes]);
 
     useEffect(() => {
         if (gameStarted) {
