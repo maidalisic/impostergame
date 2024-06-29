@@ -22,6 +22,8 @@ function App() {
     const [theme, setTheme] = useState("dark");
     const [showThemeOverlay, setShowThemeOverlay] = useState(false);
 
+    const modes = ["normal", "countries", "adults", "celebrities", "jobs"];
+
     const getItemsByMode = (mode) => {
         switch (mode) {
             case "countries":
@@ -41,7 +43,13 @@ function App() {
     };
 
     const initializeGame = useCallback(() => {
-        const items = getItemsByMode(mode);
+        let selectedMode = mode;
+        if (mode === "random") {
+            const randomMode = modes[Math.floor(Math.random() * modes.length)];
+            selectedMode = randomMode;
+        }
+
+        const items = getItemsByMode(selectedMode);
         const chosenItem = items[Math.floor(Math.random() * items.length)];
         const impostorIndexes = [];
         const newWordList = Array(numPlayers).fill(chosenItem);
@@ -51,7 +59,7 @@ function App() {
             if (!impostorIndexes.includes(randomIndex)) {
                 impostorIndexes.push(randomIndex);
                 newWordList[randomIndex] =
-                    mode === "memes" ? { name: "Imposter", path: null } : "Imposter";
+                    selectedMode === "memes" ? { name: "Imposter", path: null } : "Imposter";
             }
         }
 
@@ -290,6 +298,14 @@ function App() {
                                         }
                                     >
                                         Memes
+                                    </button>
+                                    <button
+                                        onClick={() => setMode("random")}
+                                        className={
+                                            mode === "random" ? "selected" : ""
+                                        }
+                                    >
+                                        Zufall
                                     </button>
                                 </div>
                                 <button onClick={() => setStep(2)}>
