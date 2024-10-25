@@ -5,6 +5,7 @@ import adultWords from "./adults.json";
 import celebritiesWords from "./celebrities.json";
 import jobsWords from "./jobs.json";
 import memes from "./memes.json";
+import jugendwoerter from "./jugendwoerter.json";
 import { applyTheme } from "./theme";
 import "./App.css";
 
@@ -22,7 +23,7 @@ function App() {
     const [theme, setTheme] = useState("dark");
     const [showThemeOverlay, setShowThemeOverlay] = useState(false);
 
-    const modes = useMemo(() => ["normal", "countries", "adults", "celebrities", "jobs"], []);
+    const modes = useMemo(() => ["normal", "countries", "adults", "celebrities", "jobs", "jugendwoerter"], []);
 
     const getItemsByMode = (mode) => {
         switch (mode) {
@@ -36,6 +37,8 @@ function App() {
                 return jobsWords;
             case "memes":
                 return memes;
+            case "jugendwoerter":
+                return jugendwoerter;
             case "normal":
             default:
                 return normalWords;
