@@ -295,6 +295,14 @@ function App() {
                                         Berufe
                                     </button>
                                     <button
+                                        onClick={() => setMode("jugendwoerter")}
+                                        className={
+                                            mode === "jugendwoerter" ? "selected" : ""
+                                        }
+                                    >
+                                        Jugendwörter
+                                    </button>
+                                    <button
                                         onClick={() => setMode("memes")}
                                         className={
                                             mode === "memes" ? "selected" : ""
