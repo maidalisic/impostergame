@@ -4,7 +4,6 @@ import countryWords from "./countries.json";
 import adultWords from "./adults.json";
 import celebritiesWords from "./celebrities.json";
 import jobsWords from "./jobs.json";
-import memes from "./memes.json";
 import jugendwoerter from "./jugendwoerter.json";
 import { applyTheme } from "./theme";
 import "./App.css";
@@ -35,8 +34,6 @@ function App() {
                 return celebritiesWords;
             case "jobs":
                 return jobsWords;
-            case "memes":
-                return memes;
             case "jugendwoerter":
                 return jugendwoerter;
             case "normal":
@@ -61,8 +58,7 @@ function App() {
             const randomIndex = Math.floor(Math.random() * numPlayers);
             if (!impostorIndexes.includes(randomIndex)) {
                 impostorIndexes.push(randomIndex);
-                newWordList[randomIndex] =
-                    selectedMode === "memes" ? { name: "Imposter", path: null } : "Imposter";
+                newWordList[randomIndex] = "Imposter";
             }
         }
 
@@ -203,11 +199,7 @@ function App() {
                         >
                             X
                         </button>
-                        {mode === "memes" && showCard.path ? (
-                            <img src={`${process.env.PUBLIC_URL}${showCard.path}`} alt={showCard.name} style={{ maxWidth: "100%", maxHeight: "100%" }} />
-                        ) : (
-                            <p>{showCard.name || showCard}</p>
-                        )}
+                        <p>{showCard.name || showCard}</p>
                     </div>
                 </div>
             )}
@@ -303,14 +295,6 @@ function App() {
                                         Jugendwörter
                                     </button>
                                     <button
-                                        onClick={() => setMode("memes")}
-                                        className={
-                                            mode === "memes" ? "selected" : ""
-                                        }
-                                    >
-                                        Memes
-                                    </button>
-                                    <button
                                         onClick={() => setMode("random")}
                                         className={
                                             mode === "random" ? "selected" : ""
@@ -390,11 +374,7 @@ function App() {
                                 <div className="card" key={index}>
                                     {revealedWords[index] ? (
                                         <>
-                                            {mode === "memes" && word.path ? (
-                                                <img src={`${process.env.PUBLIC_URL}${word.path}`} alt={word.name} style={{ maxWidth: "100%", maxHeight: "100%" }} />
-                                            ) : (
-                                                <p>{word.name || word}</p>
-                                            )}
+                                            <p>{word.name || word}</p>
                                             <button
                                                 onClick={() =>
                                                     handleRemoveWord(index)
