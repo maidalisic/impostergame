@@ -131,7 +131,7 @@ html { scroll-behavior: smooth; }
     animation: overlayIn 0.2s ease both;
 }
 
-/* ── Info overlay ── */
+/* ── Info & confirm overlay content ── */
 
 .info-content {
     background: var(--info-content-bg-color);
@@ -172,7 +172,60 @@ html { scroll-behavior: smooth; }
 
 .info-text ul { padding-left: 1.2rem; }
 
-/* ── Card reveal overlay ── */
+.confirm-content {
+    width: auto;
+    max-width: 320px;
+    gap: 20px;
+    padding: 2.5rem;
+}
+
+.confirm-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.confirm-yes {
+    background-color: #c0392b;
+    border-color: transparent;
+    color: #fff;
+}
+
+.confirm-yes:hover { background-color: #e74c3c; }
+
+/* ── "Bereit?" screen ── */
+
+.card-ready {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    animation: contentIn 0.2s ease both;
+}
+
+.card-ready-title {
+    font-size: clamp(3rem, 14vw, 6rem);
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.card-ready-hint {
+    font-size: 0.85rem;
+    color: #555;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* ── Card reveal ── */
 
 .card-reveal {
     width: min(88vw, 420px);
@@ -189,7 +242,6 @@ html { scroll-behavior: smooth; }
     padding: 2rem;
     box-sizing: border-box;
     animation: cardFlipReveal 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
-    transition: transform 0.2s, box-shadow 0.2s;
     user-select: none;
 }
 
@@ -202,11 +254,25 @@ html { scroll-behavior: smooth; }
     word-break: break-word;
 }
 
+.card-reveal-hint {
+    font-size: 0.85rem;
+    color: var(--accent-hover);
+    letter-spacing: 0.04em;
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Only show swipe hint on touch devices */
 .card-swipe-hint {
     font-size: 0.72rem;
     color: #444;
     letter-spacing: 0.05em;
     margin: 0;
+    display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .card-swipe-hint { display: block; }
 }
 
 /* ── Close button ── */
@@ -247,20 +313,12 @@ h1 {
 }
 
 h2 {
-    font-size: 1rem;
-    margin: 1rem 0 1.5rem 0;
+    font-size: 0.85rem;
+    margin: 0 0 0.75rem 0;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #666;
-}
-
-.game-subtitle {
-    font-size: 0.8rem;
     color: #555;
-    letter-spacing: 0.05em;
-    margin: 0 0 1.5rem 0;
-    text-transform: uppercase;
 }
 
 /* ── Buttons ── */
@@ -301,6 +359,26 @@ button:disabled {
     box-shadow: none;
 }
 
+.start-button {
+    margin-top: 2rem;
+    padding: 14px 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.start-button:not(:disabled) {
+    background-color: var(--accent-color);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.start-button:not(:disabled):hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.04);
+}
+
 .card-done {
     width: 48px; height: 48px;
     padding: 0;
@@ -328,8 +406,8 @@ button:disabled {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 4px;
 }
 
 /* ── Input ── */
@@ -343,7 +421,7 @@ input[type="number"] {
     border-radius: 12px;
     background-color: var(--card-bg-color);
     color: var(--text-color);
-    max-width: 100px;
+    max-width: 80px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -353,6 +431,156 @@ input[type="number"]:focus {
     box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+/* ── Setup screen ── */
+
+.setup-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding-bottom: 2rem;
+    margin: 0 auto;
+}
+
+.setup-section {
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+/* ── Options toggle ── */
+
+.option-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--card-bg-color);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.option-row:hover { background: var(--button-hover-bg-color); }
+
+.option-label {
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+.option-toggle {
+    flex-shrink: 0;
+    width: 34px;
+    height: 19px;
+    border-radius: 10px;
+    background: var(--button-bg-color);
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    transition: background 0.25s, border-color 0.25s;
+}
+
+.option-toggle::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #666;
+    transition: transform 0.25s, background 0.25s;
+}
+
+.option-toggle.on {
+    background: var(--accent-color);
+    border-color: transparent;
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.option-toggle.on::after {
+    transform: translateX(15px);
+    background: #fff;
+}
+
+/* ── Game screen ── */
+
+.game-info { width: 100%; }
+
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.game-subtitle {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 0.05em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.restart-button {
+    padding: 4px 10px;
+    font-size: 1rem;
+    margin: 0;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: #555;
+    box-shadow: none;
+    transition: color 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.restart-button:hover {
+    color: var(--text-color);
+    border-color: rgba(255,255,255,0.2);
+    background: transparent;
+    box-shadow: none;
+}
+
+.game-end {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 20px;
+}
+
+.game-end-label {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.game-end-word {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0.25rem 0 1rem 0;
+    animation: fadeIn 0.4s ease both;
+}
+
+.game-end-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.reveal-word-button {
+    background-color: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #555;
+    font-size: 0.85rem;
+}
+
 /* ── Card grid ── */
 
 .card-container {
@@ -360,7 +588,6 @@ input[type="number"]:focus {
     flex-wrap: wrap;
     justify-content: center;
     gap: 14px;
-    margin-top: 10px;
 }
 
 .card {
@@ -392,16 +619,9 @@ input[type="number"]:focus {
     animation: slideOut 0.35s ease forwards;
 }
 
-.card-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #555;
-}
-
 .card-flip-icon {
     font-size: 1.4rem;
-    opacity: 0.25;
+    opacity: 0.2;
 }
 
 /* ── Theme selector ── */
@@ -463,8 +683,8 @@ input[type="number"]:focus {
 
 @media (max-width: 600px) {
     h1 { font-size: 1.8rem; }
-    h2 { font-size: 0.9rem; }
-    button { font-size: 0.875rem; padding: 8px 16px; }
+    button { font-size: 0.875rem; padding: 8px 14px; }
     .card { min-width: 95px; min-height: 135px; }
     .card-reveal { border-radius: 20px; }
+    .setup-screen { max-width: 100%; }
 }
