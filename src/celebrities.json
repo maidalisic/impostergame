@@ -41,5 +41,12 @@
     { "word": "Batman", "hints": ["Gotham", "Fledermaus", "Wayne"] },
     { "word": "Superman", "hints": ["Umhang", "Clark Kent", "Krypton"] },
     { "word": "HC Strache", "hints": ["Wien", "FPÖ", "Ibiza"] },
-    { "word": "Sebastian Kurz", "hints": ["ÖVP", "Jung", "Kanzler"] }
+    { "word": "Sebastian Kurz", "hints": ["ÖVP", "Jung", "Kanzler"] },
+    { "word": "Helene Fischer", "hints": ["Schlager", "Atemlos", "Deutschland"] },
+    { "word": "Ed Sheeran", "hints": ["Gitarre", "Rothaarig", "Shape of You"] },
+    { "word": "Harry Styles", "hints": ["One Direction", "Mode", "Musik"] },
+    { "word": "Dua Lipa", "hints": ["Albanien", "Pop", "Tanzen"] },
+    { "word": "Bad Bunny", "hints": ["Puerto Rico", "Reggaeton", "Tattoo"] },
+    { "word": "Novak Djokovic", "hints": ["Tennis", "Serbien", "Grand Slam"] },
+    { "word": "Usain Bolt", "hints": ["Sprinten", "Jamaika", "Weltrekord"] }
 ]

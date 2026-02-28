@@ -47,5 +47,19 @@
     { "word": "Schokolade", "hints": ["Kakao", "Süß", "Tafel"] },
     { "word": "Pizza", "hints": ["Teig", "Käse", "Ofen"] },
     { "word": "Kaffee", "hints": ["Bohne", "Tasse", "Espresso"] },
-    { "word": "Tee", "hints": ["Kräuter", "Kanne", "Warm"] }
+    { "word": "Tee", "hints": ["Kräuter", "Kanne", "Warm"] },
+    { "word": "Streaming", "hints": ["Netflix", "Abo", "Serie"] },
+    { "word": "TikTok", "hints": ["Video", "Trend", "Scroll"] },
+    { "word": "Podcast", "hints": ["Mikrofon", "Episode", "Kopfhörer"] },
+    { "word": "Gaming", "hints": ["Controller", "Joystick", "Bildschirm"] },
+    { "word": "KI", "hints": ["Algorithmus", "Daten", "Roboter"] },
+    { "word": "Flugzeug", "hints": ["Turbine", "Pilot", "Wolken"] },
+    { "word": "Zug", "hints": ["Schiene", "Bahnhof", "Ticket"] },
+    { "word": "Supermarkt", "hints": ["Einkaufswagen", "Kasse", "Regal"] },
+    { "word": "Restaurant", "hints": ["Speisekarte", "Kellner", "Tisch"] },
+    { "word": "Flughafen", "hints": ["Koffer", "Gate", "Abflug"] },
+    { "word": "Beziehung", "hints": ["Vertrauen", "Küssen", "Paar"] },
+    { "word": "Heimweh", "hints": ["Zuhause", "Vermissen", "Ferne"] },
+    { "word": "Erfolg", "hints": ["Ziel", "Leistung", "Applaus"] },
+    { "word": "Stress", "hints": ["Druck", "Deadline", "Erschöpft"] }
 ]

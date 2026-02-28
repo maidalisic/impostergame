@@ -43,5 +43,12 @@
     { "word": "Regisseur", "hints": ["Klappe", "Szene", "Drehbuch"] },
     { "word": "Produzent", "hints": ["Studio", "Budget", "Aufnahme"] },
     { "word": "Autor", "hints": ["Roman", "Feder", "Schreibtisch"] },
-    { "word": "Krankenpfleger", "hints": ["Station", "Infusion", "Pflege"] }
+    { "word": "Krankenpfleger", "hints": ["Station", "Infusion", "Pflege"] },
+    { "word": "Kellner", "hints": ["Tablett", "Bestellung", "Trinkgeld"] },
+    { "word": "Sanitäter", "hints": ["Krankenwagen", "Trage", "Erste Hilfe"] },
+    { "word": "Erzieher", "hints": ["Kindergarten", "Kinder", "Spielen"] },
+    { "word": "Sozialarbeiter", "hints": ["Hilfe", "Unterstützung", "Beratung"] },
+    { "word": "Politiker", "hints": ["Parlament", "Wahl", "Rede"] },
+    { "word": "Taxifahrer", "hints": ["Fahrgast", "Meter", "Nacht"] },
+    { "word": "Postbote", "hints": ["Brief", "Paket", "Fahrrad"] }
 ]
