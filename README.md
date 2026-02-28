@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+# Imposter Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A browser-based party game for 3–11+ players, built with React. Every player receives the same word — except the imposter, who only gets a hint and has to guess the real word.
 
-## Available Scripts
+**Live:** [maidalisic.github.io/impostergame](https://maidalisic.github.io/impostergame)
 
-In the project directory, you can run:
+## Game Modes
 
-### `npm start`
+| Mode | Content |
+| --- | --- |
+| Normal | Everyday words and topics |
+| Countries | Countries of the world |
+| Celebrities | Celebrities, athletes, cartoon characters |
+| Jobs | Professions and occupations |
+| Youth Words | Current German slang |
+| Adults | 18+ only |
+| Random | Picks one of the above at random |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Imposter Hint** – Optional: the imposter receives a random hint word instead of the real word
+- **Word Reveal** – After the game, the word can be revealed in a protected step (prevents quick peeking)
+- **4 Themes** – Dark, Light, Pink, Blue
+- **Swipe to Dismiss** – Swipe cards away on mobile devices
+- **Persistence** – Settings (player count, mode, theme) are saved across sessions
 
-### `npm test`
+## Development
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm start        # Dev server at localhost:3000
+npm run build    # Production build
+npm run deploy   # Build + deploy to GitHub Pages
+```
 
-### `npm run build`
+## Deployment
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Automatically deployed to GitHub Pages via GitHub Actions on every push to `main`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Developed with love in Maid's Keller
