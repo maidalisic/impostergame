@@ -1,13 +1,16 @@
 :root {
     --bg-color: #1a1a1a;
-    --text-color: white;
+    --text-color: #f0f0f0;
     --button-bg-color: #333;
-    --button-hover-bg-color: #555;
-    --card-bg-color: #333;
+    --button-hover-bg-color: #444;
+    --card-bg-color: #2a2a2a;
     --input-border-color: #555;
-    --footer-bg-color: #1a1a1a;
-    --footer-text-color: #888;
-    --info-content-bg-color: #2c2c2c;
+    --footer-bg-color: transparent;
+    --footer-text-color: #666;
+    --info-content-bg-color: #222;
+    --accent-color: #6366f1;
+    --accent-hover: #818cf8;
+    --accent-glow: rgba(99, 102, 241, 0.3);
 }
 
 body {
@@ -24,9 +27,7 @@ body {
     overflow: auto;
 }
 
-html {
-    scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 #root {
     display: flex;
@@ -48,110 +49,279 @@ html {
     overflow: auto;
 }
 
-.home-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    background-color: var(--button-bg-color);
-    border: none;
-    border-radius: 12px;
-    color: var(--text-color);
-    transition: background-color 0.3s, transform 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+/* ── Animations ── */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.theme-button {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    background-color: var(--button-bg-color);
-    border: none;
-    border-radius: 12px;
-    color: var(--text-color);
-    transition: background-color 0.3s, transform 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+@keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
+@keyframes contentIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: scale(0.9) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes cardFlipReveal {
+    0%   { transform: perspective(900px) rotateY(-90deg) scale(0.85); opacity: 0; }
+    60%  { transform: perspective(900px) rotateY(8deg)  scale(1.02); opacity: 1; }
+    100% { transform: perspective(900px) rotateY(0deg)  scale(1);    opacity: 1; }
+}
+
+@keyframes slideOut {
+    to { transform: translateX(130%) rotate(8deg); opacity: 0; }
+}
+
+.App-header > div {
+    animation: fadeIn 0.25s ease both;
+}
+
+/* ── Fixed buttons ── */
+
+.home-button,
+.theme-button,
 .info-button {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
-    padding: 10px 15px;
+    padding: 10px 18px;
     font-size: 1rem;
     cursor: pointer;
     background-color: var(--button-bg-color);
-    border: none;
-    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
     color: var(--text-color);
-    transition: background-color 0.3s, transform 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s, transform 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     z-index: 1000;
 }
 
-.info-overlay {
+.home-button { top: 12px; left: 12px; }
+.theme-button { top: 12px; right: 12px; }
+.info-button  { bottom: 12px; right: 12px; border-radius: 50%; padding: 10px 15px; }
+
+.home-button:hover,
+.theme-button:hover,
+.info-button:hover {
+    background-color: var(--button-hover-bg-color);
+    transform: scale(1.05);
+}
+
+/* ── Overlays ── */
+
+.info-overlay,
+.theme-overlay,
+.card-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.82);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2000;
+    animation: overlayIn 0.2s ease both;
 }
+
+/* ── Info overlay ── */
 
 .info-content {
     background: var(--info-content-bg-color);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
     max-width: 90%;
-    max-height: 90%;
     width: 90%;
-    height: 90%;
     text-align: center;
     position: relative;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    animation: contentIn 0.22s ease both;
 }
 
-.close-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
+.info-text { height: auto; max-height: 80vh; }
+
+.info-text p, .info-text ul {
+    font-size: 1rem;
+    text-align: left;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+    color: #aaa;
 }
 
-.info-content p {
-    font-size: 2rem;
+.info-text h2 {
+    text-transform: none;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    letter-spacing: 0;
+}
+
+.info-text ul { padding-left: 1.2rem; }
+
+/* ── Card reveal overlay ── */
+
+.card-reveal {
+    width: min(88vw, 420px);
+    height: min(72vh, 560px);
+    background: var(--card-bg-color);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    box-shadow: 0 12px 60px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 2rem;
+    box-sizing: border-box;
+    animation: cardFlipReveal 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+}
+
+.card-reveal-word {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-align: center;
+    word-break: break-word;
+}
+
+.card-swipe-hint {
+    font-size: 0.72rem;
+    color: #444;
+    letter-spacing: 0.05em;
     margin: 0;
 }
 
+/* ── Close button ── */
+
+.close-button {
+    position: absolute;
+    top: 0.75rem; right: 0.75rem;
+    background: rgba(255,255,255,0.07);
+    border: none;
+    color: var(--text-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s;
+}
+
+.close-button:hover {
+    background: rgba(255,255,255,0.14);
+    transform: none;
+    box-shadow: none;
+}
+
+/* ── Typography ── */
+
+.App-header { text-align: center; width: 100%; }
+
 h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
     margin: 2.5rem 0 0.5rem 0;
 }
 
 h2 {
-    font-size: 1.5rem;
-    margin: 1rem 0;
-    font-weight: normal;
-    color: #b3b3b3;
+    font-size: 1rem;
+    margin: 1rem 0 1.5rem 0;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.game-subtitle {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 0.05em;
+    margin: 0 0 1.5rem 0;
+    text-transform: uppercase;
+}
+
+/* ── Buttons ── */
+
+button {
+    padding: 10px 22px;
+    font-size: 1rem;
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: var(--button-bg-color);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    color: var(--text-color);
+    transition: background-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+    transform: scale(1.04);
+}
+
+button:active { transform: scale(0.97); }
+
+button.selected {
+    background-color: var(--accent-color);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 0 14px var(--accent-glow);
+}
+
+button.selected:hover { background-color: var(--accent-hover); }
+
+button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.card-done {
+    width: 48px; height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    margin: 0;
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.3);
+    color: var(--accent-hover);
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.card-done:hover {
+    background: var(--accent-color);
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 0 16px var(--accent-glow);
 }
 
 .button-grid {
@@ -162,28 +332,7 @@ h2 {
     margin-bottom: 20px;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    margin-top: 10px;
-    cursor: pointer;
-    background-color: var(--button-bg-color);
-    border: none;
-    border-radius: 12px;
-    color: var(--text-color);
-    transition: background-color 0.3s, transform 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-button:hover {
-    background-color: var(--button-hover-bg-color);
-    transform: scale(1.05);
-}
-
-button.selected {
-    background-color: var(--button-hover-bg-color);
-    color: var(--text-color);
-}
+/* ── Input ── */
 
 input[type="number"] {
     padding: 10px;
@@ -195,83 +344,81 @@ input[type="number"] {
     background-color: var(--card-bg-color);
     color: var(--text-color);
     max-width: 100px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
+
+input[type="number"]:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ── Card grid ── */
 
 .card-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    transition: filter 0.3s;
-}
-
-.card-container.blurred .card:not(.active) {
-    filter: blur(5px);
+    gap: 14px;
+    margin-top: 10px;
 }
 
 .card {
     background-color: var(--card-bg-color);
-    border: 1px solid var(--text-color);
-    border-radius: 12px;
-    padding: 20px;
-    font-size: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    min-width: 110px;
+    min-height: 155px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 100px;
-    min-height: 150px;
-    color: var(--text-color);
-    z-index: 2;
-    transition: transform 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    animation: cardIn 0.25s ease both;
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
 }
 
-.card.active {
-    transform: scale(1.1);
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5);
 }
 
-.App-footer {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: var(--footer-bg-color);
-    width: 100%;
-    text-align: center;
-    font-size: 0.875rem;
-    color: var(--footer-text-color);
+.card:active { transform: scale(0.96); }
+
+.card.removing {
+    animation: slideOut 0.35s ease forwards;
 }
 
-.App-footer p {
-    margin: 0;
+.card-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
 }
 
-.theme-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
+.card-flip-icon {
+    font-size: 1.4rem;
+    opacity: 0.25;
 }
+
+/* ── Theme selector ── */
 
 .theme-content {
     background: var(--info-content-bg-color);
-    padding: 5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 3rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
     max-width: 90%;
-    max-height: 90%;
     text-align: center;
     position: relative;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    animation: contentIn 0.22s ease both;
 }
 
 .theme-preview {
@@ -281,69 +428,43 @@ input[type="number"] {
 }
 
 .theme-option {
-    width: 50px;
-    height: 50px;
+    width: 52px; height: 52px;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+    border: 2px solid rgba(255,255,255,0.12);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .theme-option:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
 }
 
-.close-button {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.9rem;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
+.theme-dark  { background-color: #1a1a1a; }
+.theme-light { background-color: #ffffff; }
+.theme-pink  { background-color: #ffe4e1; }
+.theme-blue  { background-color: #add8e6; }
+
+/* ── Footer ── */
+
+.App-footer {
+    margin-top: 40px;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--footer-text-color);
 }
 
-.theme-dark {
-    background-color: #1a1a1a;
-}
+.App-footer p { margin: 0; }
 
-.theme-light {
-    background-color: #ffffff;
-}
-
-.theme-pink {
-    background-color: #ffe4e1;
-}
-
-.theme-blue {
-    background-color: #add8e6;
-}
+/* ── Responsive ── */
 
 @media (max-width: 600px) {
-    .App-header {
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.25rem;
-    }
-
-    button {
-        font-size: 0.875rem;
-        padding: 8px 16px;
-    }
-
-    .card {
-        font-size: 1.25rem;
-        padding: 15px;
-    }
-
-    .info-content p {
-        font-size: 1.5rem;
-    }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 0.9rem; }
+    button { font-size: 0.875rem; padding: 8px 16px; }
+    .card { min-width: 95px; min-height: 135px; }
+    .card-reveal { border-radius: 20px; }
 }

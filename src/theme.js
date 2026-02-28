@@ -1,14 +1,14 @@
 const themes = {
     dark: {
         "--bg-color": "#1a1a1a",
-        "--text-color": "#ffffff",
+        "--text-color": "#f0f0f0",
         "--button-bg-color": "#333",
-        "--button-hover-bg-color": "#555",
-        "--card-bg-color": "#333",
+        "--button-hover-bg-color": "#444",
+        "--card-bg-color": "#2a2a2a",
         "--input-border-color": "#555",
-        "--footer-bg-color": "#1a1a1a",
-        "--footer-text-color": "#888",
-        "--info-content-bg-color": "#2c2c2c",
+        "--footer-bg-color": "transparent",
+        "--footer-text-color": "#666",
+        "--info-content-bg-color": "#222",
     },
     light: {
         "--bg-color": "#ffffff",

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import normalWords from "./words.json";
 import countryWords from "./countries.json";
 import adultWords from "./adults.json";
@@ -28,10 +28,13 @@ function App() {
     const [step, setStep] = useState(1); // 1-3 = Setup, 4 = Spiel
     const [wordList, setWordList] = useState([]);
     const [activeCard, setActiveCard] = useState(null); // { word, index } | null
+    const [removingIndex, setRemovingIndex] = useState(null);
+    const [swipeOffset, setSwipeOffset] = useState(0);
     const [mode, setMode] = useState("normal");
     const [showInfo, setShowInfo] = useState(false);
     const [theme, setTheme] = useState("dark");
     const [showThemeOverlay, setShowThemeOverlay] = useState(false);
+    const touchStartRef = useRef(null);
 
     const initializeGame = useCallback(() => {
         const selectedMode = mode === "random"
@@ -55,9 +58,7 @@ function App() {
     }, [mode, numPlayers, numImposters]);
 
     useEffect(() => {
-        if (step === 4) {
-            initializeGame();
-        }
+        if (step === 4) initializeGame();
     }, [step, initializeGame]);
 
     useEffect(() => {
@@ -66,11 +67,35 @@ function App() {
 
     const handleRevealWord = (index) => {
         setActiveCard({ word: wordList[index], index });
+        setSwipeOffset(0);
     };
 
     const handleRemoveWord = (index) => {
-        setWordList((prev) => prev.filter((_, i) => i !== index));
         setActiveCard(null);
+        setRemovingIndex(index);
+        setTimeout(() => {
+            setWordList(prev => prev.filter((_, i) => i !== index));
+            setRemovingIndex(null);
+        }, 350);
+    };
+
+    const handleTouchStart = (e) => {
+        touchStartRef.current = e.touches[0].clientX;
+        setSwipeOffset(0);
+    };
+
+    const handleTouchMove = (e) => {
+        if (touchStartRef.current === null) return;
+        setSwipeOffset(e.touches[0].clientX - touchStartRef.current);
+    };
+
+    const handleTouchEnd = () => {
+        if (Math.abs(swipeOffset) > 90) {
+            handleRemoveWord(activeCard.index);
+        } else {
+            setSwipeOffset(0);
+        }
+        touchStartRef.current = null;
     };
 
     const resetGame = () => {
@@ -93,7 +118,7 @@ function App() {
 
             {showInfo && (
                 <div className="info-overlay">
-                    <div className="info-content">
+                    <div className="info-content info-text">
                         <button className="close-button" onClick={() => setShowInfo(false)}>X</button>
                         <h2>Spielanleitung</h2>
                         <p>
@@ -114,10 +139,21 @@ function App() {
             )}
 
             {activeCard && (
-                <div className="info-overlay">
-                    <div className="info-content">
-                        <button className="close-button" onClick={() => handleRemoveWord(activeCard.index)}>X</button>
-                        <p>{activeCard.word}</p>
+                <div className="card-overlay">
+                    <div
+                        className="card-reveal"
+                        style={
+                            swipeOffset !== 0
+                                ? { transform: `translateX(${swipeOffset}px) rotate(${swipeOffset * 0.03}deg)`, transition: "none" }
+                                : {}
+                        }
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        <p className="card-reveal-word">{activeCard.word}</p>
+                        <button className="card-done" onClick={() => handleRemoveWord(activeCard.index)}>✓</button>
+                        <p className="card-swipe-hint">← wischen zum entfernen →</p>
                     </div>
                 </div>
             )}
@@ -219,13 +255,15 @@ function App() {
                 )}
                 {step === 4 && (
                     <div className="game-info">
-                        <p>Spiel gestartet mit {numPlayers} Spielern</p>
+                        <p className="game-subtitle">Spiel gestartet mit {numPlayers} Spielern</p>
                         <div className="card-container">
                             {wordList.map((_, index) => (
-                                <div className="card" key={index}>
-                                    <button onClick={() => handleRevealWord(index)}>
-                                        Karte umdrehen
-                                    </button>
+                                <div
+                                    className={`card ${removingIndex === index ? "removing" : ""}`}
+                                    key={index}
+                                    onClick={() => removingIndex !== index && handleRevealWord(index)}
+                                >
+                                    <span className="card-flip-icon">↩</span>
                                 </div>
                             ))}
                             {wordList.length === 0 && (
