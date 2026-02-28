@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import normalWords from "./words.json";
 import countryWords from "./countries.json";
 import adultWords from "./adults.json";
@@ -8,51 +8,40 @@ import jugendwoerter from "./jugendwoerter.json";
 import { applyTheme } from "./theme";
 import "./App.css";
 
+const MODES = ["normal", "countries", "adults", "celebrities", "jobs", "jugendwoerter"];
+
+function getItemsByMode(mode) {
+    switch (mode) {
+        case "countries": return countryWords;
+        case "adults": return adultWords;
+        case "celebrities": return celebritiesWords;
+        case "jobs": return jobsWords;
+        case "jugendwoerter": return jugendwoerter;
+        case "normal":
+        default: return normalWords;
+    }
+}
+
 function App() {
     const [numPlayers, setNumPlayers] = useState(0);
     const [numImposters, setNumImposters] = useState(0);
-    const [step, setStep] = useState(1);
-    const [gameStarted, setGameStarted] = useState(false);
+    const [step, setStep] = useState(1); // 1-3 = Setup, 4 = Spiel
     const [wordList, setWordList] = useState([]);
-    const [revealedWords, setRevealedWords] = useState([]);
-    const [activeCardIndex, setActiveCardIndex] = useState(null);
+    const [activeCard, setActiveCard] = useState(null); // { word, index } | null
     const [mode, setMode] = useState("normal");
     const [showInfo, setShowInfo] = useState(false);
-    const [showCard, setShowCard] = useState(null);
     const [theme, setTheme] = useState("dark");
     const [showThemeOverlay, setShowThemeOverlay] = useState(false);
 
-    const modes = useMemo(() => ["normal", "countries", "adults", "celebrities", "jobs", "jugendwoerter"], []);
-
-    const getItemsByMode = (mode) => {
-        switch (mode) {
-            case "countries":
-                return countryWords;
-            case "adults":
-                return adultWords;
-            case "celebrities":
-                return celebritiesWords;
-            case "jobs":
-                return jobsWords;
-            case "jugendwoerter":
-                return jugendwoerter;
-            case "normal":
-            default:
-                return normalWords;
-        }
-    };
-
     const initializeGame = useCallback(() => {
-        let selectedMode = mode;
-        if (mode === "random") {
-            const randomMode = modes[Math.floor(Math.random() * modes.length)];
-            selectedMode = randomMode;
-        }
+        const selectedMode = mode === "random"
+            ? MODES[Math.floor(Math.random() * MODES.length)]
+            : mode;
 
         const items = getItemsByMode(selectedMode);
         const chosenItem = items[Math.floor(Math.random() * items.length)];
-        const impostorIndexes = [];
         const newWordList = Array(numPlayers).fill(chosenItem);
+        const impostorIndexes = [];
 
         while (impostorIndexes.length < numImposters) {
             const randomIndex = Math.floor(Math.random() * numPlayers);
@@ -63,81 +52,32 @@ function App() {
         }
 
         setWordList(newWordList);
-        setRevealedWords(Array(numPlayers).fill(false));
-    }, [mode, numPlayers, numImposters, modes]);
+    }, [mode, numPlayers, numImposters]);
 
     useEffect(() => {
-        if (gameStarted) {
+        if (step === 4) {
             initializeGame();
         }
-    }, [gameStarted, initializeGame]);
+    }, [step, initializeGame]);
 
     useEffect(() => {
         applyTheme(theme);
     }, [theme]);
 
     const handleRevealWord = (index) => {
-        setShowCard(wordList[index]);
-        setActiveCardIndex(index);
+        setActiveCard({ word: wordList[index], index });
     };
 
     const handleRemoveWord = (index) => {
-        setWordList((prevWordList) =>
-            prevWordList.filter((_, i) => i !== index)
-        );
-        setRevealedWords((prevRevealedWords) =>
-            prevRevealedWords.filter((_, i) => i !== index)
-        );
-        setShowCard(null);
-        setActiveCardIndex(null);
-    };
-
-    const renderPlayerButtons = () => {
-        const buttons = [];
-        for (let i = 3; i <= 11; i++) {
-            buttons.push(
-                <button
-                    key={i}
-                    onClick={() => setNumPlayers(i)}
-                    className={numPlayers === i ? "selected" : ""}
-                >
-                    {i}
-                </button>
-            );
-        }
-        return buttons;
-    };
-
-    const renderImposterButtons = () => {
-        const buttons = [];
-        for (let i = 1; i <= 3; i++) {
-            buttons.push(
-                <button
-                    key={i}
-                    onClick={() => setNumImposters(i)}
-                    className={numImposters === i ? "selected" : ""}
-                >
-                    {i}
-                </button>
-            );
-        }
-        return buttons;
-    };
-
-    const startGame = () => {
-        setGameStarted(true);
+        setWordList((prev) => prev.filter((_, i) => i !== index));
+        setActiveCard(null);
     };
 
     const resetGame = () => {
-        setGameStarted(false);
         setStep(1);
         setNumPlayers(0);
         setNumImposters(0);
         setMode("normal");
-    };
-
-    const restartGame = () => {
-        initializeGame();
     };
 
     const handleThemeChange = (selectedTheme) => {
@@ -147,24 +87,14 @@ function App() {
 
     return (
         <div className="App">
-            <button className="home-button" onClick={resetGame}>
-                🏠
-            </button>
-            <button className="theme-button" onClick={() => setShowThemeOverlay(true)}>
-                Theme wechseln
-            </button>
-            <button className="info-button" onClick={() => setShowInfo(true)}>
-                ℹ️
-            </button>
+            <button className="home-button" onClick={resetGame}>🏠</button>
+            <button className="theme-button" onClick={() => setShowThemeOverlay(true)}>Theme wechseln</button>
+            <button className="info-button" onClick={() => setShowInfo(true)}>ℹ️</button>
+
             {showInfo && (
                 <div className="info-overlay">
                     <div className="info-content">
-                        <button
-                            className="close-button"
-                            onClick={() => setShowInfo(false)}
-                        >
-                            X
-                        </button>
+                        <button className="close-button" onClick={() => setShowInfo(false)}>X</button>
                         <h2>Spielanleitung</h2>
                         <p>
                             Word Guesser ist ein Spiel, bei dem die meisten
@@ -175,233 +105,133 @@ function App() {
                         <p>Spielablauf:</p>
                         <ul>
                             <li>Wähle die Anzahl der Spieler und Imposter.</li>
-                            <li>
-                                Starte das Spiel. Jeder Spieler sieht eine Karte
-                                mit einem Wort oder "Imposter".
-                            </li>
-                            <li>
-                                Diskutiert und versucht herauszufinden, wer die
-                                Imposter sind.
-                            </li>
-                            <li>
-                                Die Imposter versuchen, unentdeckt zu bleiben.
-                            </li>
+                            <li>Starte das Spiel. Jeder Spieler sieht eine Karte mit einem Wort oder "Imposter".</li>
+                            <li>Diskutiert und versucht herauszufinden, wer die Imposter sind.</li>
+                            <li>Die Imposter versuchen, unentdeckt zu bleiben.</li>
                         </ul>
                     </div>
                 </div>
             )}
-            {showCard && (
+
+            {activeCard && (
                 <div className="info-overlay">
                     <div className="info-content">
-                        <button
-                            className="close-button"
-                            onClick={() => handleRemoveWord(activeCardIndex)}
-                        >
-                            X
-                        </button>
-                        <p>{showCard.name || showCard}</p>
+                        <button className="close-button" onClick={() => handleRemoveWord(activeCard.index)}>X</button>
+                        <p>{activeCard.word}</p>
                     </div>
                 </div>
             )}
+
             {showThemeOverlay && (
                 <div className="theme-overlay">
                     <div className="theme-content">
-                        <button
-                            className="close-button"
-                            onClick={() => setShowThemeOverlay(false)}
-                        >
-                            X
-                        </button>
+                        <button className="close-button" onClick={() => setShowThemeOverlay(false)}>X</button>
                         <h2>Wählen Sie ein Thema</h2>
                         <div className="theme-preview">
-                            <div
-                                className="theme-option theme-dark"
-                                onClick={() => handleThemeChange("dark")}
-                            ></div>
-                            <div
-                                className="theme-option theme-light"
-                                onClick={() => handleThemeChange("light")}
-                            ></div>
-                            <div
-                                className="theme-option theme-pink"
-                                onClick={() => handleThemeChange("pink")}
-                            ></div>
-                            <div
-                                className="theme-option theme-blue"
-                                onClick={() => handleThemeChange("blue")}
-                            ></div>
+                            <div className="theme-option theme-dark" onClick={() => handleThemeChange("dark")}></div>
+                            <div className="theme-option theme-light" onClick={() => handleThemeChange("light")}></div>
+                            <div className="theme-option theme-pink" onClick={() => handleThemeChange("pink")}></div>
+                            <div className="theme-option theme-blue" onClick={() => handleThemeChange("blue")}></div>
                         </div>
                     </div>
                 </div>
             )}
+
             <header className="App-header">
                 <h1>Word Guesser</h1>
-                {!gameStarted ? (
-                    <>
-                        {step === 1 && (
-                            <div>
-                                <h2>Modus auswählen:</h2>
-                                <div className="button-grid">
-                                    <button
-                                        onClick={() => setMode("normal")}
-                                        className={
-                                            mode === "normal" ? "selected" : ""
-                                        }
-                                    >
-                                        Normal
-                                    </button>
-                                    <button
-                                        onClick={() => setMode("countries")}
-                                        className={
-                                            mode === "countries"
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        Länder
-                                    </button>
-                                    <button
-                                        onClick={() => setMode("adults")}
-                                        className={
-                                            mode === "adults" ? "selected" : ""
-                                        }
-                                    >
-                                        18+
-                                    </button>
-                                    <button
-                                        onClick={() => setMode("celebrities")}
-                                        className={
-                                            mode === "celebrities"
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        Berühmtheiten
-                                    </button>
-                                    <button
-                                        onClick={() => setMode("jobs")}
-                                        className={
-                                            mode === "jobs" ? "selected" : ""
-                                        }
-                                    >
-                                        Berufe
-                                    </button>
-                                    <button
-                                        onClick={() => setMode("jugendwoerter")}
-                                        className={
-                                            mode === "jugendwoerter" ? "selected" : ""
-                                        }
-                                    >
-                                        Jugendwörter
-                                    </button>
-                                    <button
-                                        onClick={() => setMode("random")}
-                                        className={
-                                            mode === "random" ? "selected" : ""
-                                        }
-                                    >
-                                        Zufall
-                                    </button>
-                                </div>
-                                <button onClick={() => setStep(2)}>
-                                    Weiter
-                                </button>
-                            </div>
-                        )}
-                        {step === 2 && (
-                            <div>
-                                <h2>Anzahl der Spieler:</h2>
-                                <div className="button-grid">
-                                    {renderPlayerButtons()}
-                                    <input
-                                        type="number"
-                                        placeholder="Mehr als 11"
-                                        onChange={(e) =>
-                                            setNumPlayers(
-                                                Number(e.target.value)
-                                            )
-                                        }
-                                        min="12"
-                                    />
-                                </div>
+                {step === 1 && (
+                    <div>
+                        <h2>Modus auswählen:</h2>
+                        <div className="button-grid">
+                            {[
+                                { value: "normal", label: "Normal" },
+                                { value: "countries", label: "Länder" },
+                                { value: "adults", label: "18+" },
+                                { value: "celebrities", label: "Berühmtheiten" },
+                                { value: "jobs", label: "Berufe" },
+                                { value: "jugendwoerter", label: "Jugendwörter" },
+                                { value: "random", label: "Zufall" },
+                            ].map(({ value, label }) => (
                                 <button
-                                    onClick={() => setStep(3)}
-                                    disabled={numPlayers < 3}
+                                    key={value}
+                                    onClick={() => setMode(value)}
+                                    className={mode === value ? "selected" : ""}
                                 >
-                                    Weiter
+                                    {label}
                                 </button>
-                                <button onClick={() => setStep(1)}>
-                                    Zurück
-                                </button>
-                            </div>
-                        )}
-                        {step === 3 && (
-                            <div>
-                                <h2>Anzahl der Imposter:</h2>
-                                <div className="button-grid">
-                                    {renderImposterButtons()}
-                                    <input
-                                        type="number"
-                                        placeholder="Mehr als 3"
-                                        onChange={(e) =>
-                                            setNumImposters(
-                                                Number(e.target.value)
-                                            )
-                                        }
-                                        min="4"
-                                    />
-                                </div>
+                            ))}
+                        </div>
+                        <button onClick={() => setStep(2)}>Weiter</button>
+                    </div>
+                )}
+                {step === 2 && (
+                    <div>
+                        <h2>Anzahl der Spieler:</h2>
+                        <div className="button-grid">
+                            {Array.from({ length: 9 }, (_, i) => i + 3).map((i) => (
                                 <button
-                                    onClick={startGame}
-                                    disabled={
-                                        numImposters < 1 ||
-                                        numImposters >= numPlayers
-                                    }
+                                    key={i}
+                                    onClick={() => setNumPlayers(i)}
+                                    className={numPlayers === i ? "selected" : ""}
                                 >
-                                    Spiel starten
+                                    {i}
                                 </button>
-                                <button onClick={() => setStep(2)}>
-                                    Zurück
+                            ))}
+                            <input
+                                type="number"
+                                placeholder="Mehr als 11"
+                                onChange={(e) => setNumPlayers(Number(e.target.value))}
+                                min="12"
+                            />
+                        </div>
+                        <button onClick={() => setStep(3)} disabled={numPlayers < 3}>Weiter</button>
+                        <button onClick={() => setStep(1)}>Zurück</button>
+                    </div>
+                )}
+                {step === 3 && (
+                    <div>
+                        <h2>Anzahl der Imposter:</h2>
+                        <div className="button-grid">
+                            {Array.from({ length: 3 }, (_, i) => i + 1).map((i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setNumImposters(i)}
+                                    className={numImposters === i ? "selected" : ""}
+                                >
+                                    {i}
                                 </button>
-                            </div>
-                        )}
-                    </>
-                ) : (
+                            ))}
+                            <input
+                                type="number"
+                                placeholder="Mehr als 3"
+                                onChange={(e) => setNumImposters(Number(e.target.value))}
+                                min="4"
+                            />
+                        </div>
+                        <button
+                            onClick={() => setStep(4)}
+                            disabled={numImposters < 1 || numImposters >= numPlayers}
+                        >
+                            Spiel starten
+                        </button>
+                        <button onClick={() => setStep(2)}>Zurück</button>
+                    </div>
+                )}
+                {step === 4 && (
                     <div className="game-info">
                         <p>Spiel gestartet mit {numPlayers} Spielern</p>
                         <div className="card-container">
-                            {wordList.slice(0, numPlayers).map((word, index) => (
+                            {wordList.map((_, index) => (
                                 <div className="card" key={index}>
-                                    {revealedWords[index] ? (
-                                        <>
-                                            <p>{word.name || word}</p>
-                                            <button
-                                                onClick={() =>
-                                                    handleRemoveWord(index)
-                                                }
-                                            >
-                                                Entfernen
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <button
-                                            onClick={() =>
-                                                handleRevealWord(index)
-                                            }
-                                        >
-                                            Karte umdrehen
-                                        </button>
-                                    )}
+                                    <button onClick={() => handleRevealWord(index)}>
+                                        Karte umdrehen
+                                    </button>
                                 </div>
                             ))}
                             {wordList.length === 0 && (
                                 <div style={{ marginTop: "20px" }}>
-                                    <button onClick={resetGame}>
-                                        Neues Spiel
-                                    </button>
-                                    <button onClick={restartGame}>
-                                        Spiel neu starten
-                                    </button>
+                                    <button onClick={resetGame}>Neues Spiel</button>
+                                    <button onClick={initializeGame}>Spiel neu starten</button>
                                 </div>
                             )}
                         </div>
